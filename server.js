@@ -28,7 +28,7 @@ app.post('/state', (req, res) => {
             clearInterval(loopInterval); // stop previous loop
         }
         emu.setState(JSON.stringify(req.body));
-        loop = setInterval(loop, 4);
+        loopInterval = setInterval(loop, 4);
         res.json({ status: 'ok' });
     } catch (err) {
         res.status(500).json({ error: err.message });
