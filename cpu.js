@@ -390,6 +390,11 @@ function cpu_set_state(state) {
     interrupts = state.interrupts;
     
     memory = state.memory;
+
+	// helps button reset properly after loading state
+	hw_set_button(button_t.BTN_LEFT, btn_state_t.BTN_STATE_RELEASED);
+	hw_set_button(button_t.BTN_MIDDLE, btn_state_t.BTN_STATE_RELEASED);
+	hw_set_button(button_t.BTN_RIGHT, btn_state_t.BTN_STATE_RELEASED);
 }
 
 function cpu_get_depth() {
