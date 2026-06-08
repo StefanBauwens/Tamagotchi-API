@@ -17,6 +17,8 @@ Version 1.0.
 
 
 ## Run with Docker
+The official docker image is available at `ghcr.io/stefanbauwens/tamagotchi-api:latest` if you don't want to build manually.
+
 Download this repository.
 
 CD to the main directory.
