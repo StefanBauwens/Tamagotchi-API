@@ -203,13 +203,13 @@ function saveAll() {
 
 // Async autosave of every running pet; never blocks the event loop.
 async function saveAllAsync() {
-    for (const session of sessions.values()) {
-        try {
-            await saveSessionAsync(session);
-        } catch (err) {
-            console.error(`Failed to save pet ${session.pebbleId}:`, err.message);
-        }
-    }
+    await Promise.allSettled(
+        [...sessions.values()].map((session) =>
+            saveSessionAsync(session).catch((err) => {
+                console.error(`Failed to save pet ${session.pebbleId}:`, err.message);
+            })
+        )
+    );
 }
 
 // Reload pets persisted on a previous run, recreating their emulators and loops.
@@ -220,19 +220,22 @@ async function restoreAll() {
     } catch {
         return;
     }
-    for (const f of files) {
-        if (!f.endsWith('.json')) continue;
-        try {
-            const data = JSON.parse(fs.readFileSync(path.join(PETS_DIR, f), 'utf-8'));
-            const session = await getOrCreateSession(data.pebbleId, data.pasteUrl);
-            stopLoop(session);
-            session.emu.setState(JSON.stringify(data.state));
-            startLoop(session);
-            console.log(`Restored pet ${data.pebbleId}`);
-        } catch (err) {
-            console.error(`Failed to restore pet from ${f}:`, err.message);
-        }
-    }
+    await Promise.allSettled(
+        files
+            .filter((f) => f.endsWith('.json'))
+            .map(async (f) => {
+                try {
+                    const data = JSON.parse(await fsp.readFile(path.join(PETS_DIR, f), 'utf-8'));
+                    const session = await getOrCreateSession(data.pebbleId, data.pasteUrl);
+                    stopLoop(session);
+                    session.emu.setState(JSON.stringify(data.state));
+                    startLoop(session);
+                    console.log(`Restored pet ${data.pebbleId}`);
+                } catch (err) {
+                    console.error(`Failed to restore pet from ${f}:`, err.message);
+                }
+            })
+    );
 }
 
 // Look up an existing emulator for a user (without creating one).
