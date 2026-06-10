@@ -46,15 +46,21 @@ Version 1.0.
 
 
 ## Run with Docker
-The official docker image is available at `ghcr.io/stefanbauwens/tamagotchi-api:latest` if you don't want to build manually.
+### Pull docker image
+The official docker image is available at `ghcr.io/stefanbauwens/tamagotchi-api:latest` if you don't want to build manually. 
+```
+docker pull ghcr.io/stefanbauwens/tamagotchi-api:latest
+```
 
+### Build manually
 Download this repository.
-
 CD to the main directory.
 
 ```
 docker build -t tamagotchi-api .
 ```
+### Run
+If using the official docker image replace `tamagotchi-api` with `ghcr.io/stefanbauwens/tamagotchi-api:latest` in the docker run command. 
 
 ROMs are normally supplied per-user via the `x-rom-paste` header (see [Multiple users](#multiple-users)), so no ROM is needed to start the server:
 
