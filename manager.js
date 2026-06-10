@@ -244,29 +244,6 @@ async function restoreSession(data) {
     return session;
 }
 
-// Reload pets persisted on a previous run, recreating their emulators and loops.
-async function restoreAll() {
-    let files;
-    try {
-        files = fs.readdirSync(PETS_DIR);
-    } catch {
-        return;
-    }
-    await Promise.allSettled(
-        files
-            .filter((f) => f.endsWith('.json'))
-            .map(async (f) => {
-                try {
-                    const data = JSON.parse(await fsp.readFile(path.join(PETS_DIR, f), 'utf-8'));
-                    await restoreSession(data);
-                    console.log(`Restored pet ${data.pebbleId}`);
-                } catch (err) {
-                    console.error(`Failed to restore pet from ${f}:`, err.message);
-                }
-            })
-    );
-}
-
 // Look up an existing emulator for a user (without creating one).
 function getSession(pebbleId) {
     const session = sessions.get(pebbleId);
@@ -355,5 +332,4 @@ module.exports = {
     destroySession,
     saveSession,
     saveAll,
-    restoreAll,
 };
