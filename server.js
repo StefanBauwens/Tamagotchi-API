@@ -71,8 +71,6 @@ const PORT = process.env.PORT || 3535;
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Running on port ${PORT}`);
-    // Bring back any pets that were running before the last shutdown.
-    manager.restoreAll();
 });
 
 // Persist all pets on shutdown so nothing is lost between the last autosave and exit.
